@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StrideMark — Youth Athlete Ecosystem</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+–black:      #080808;
+–off-black:  #111111;
+–white:      #ffffff;
+–off-white:  #f5f5f3;
+–light-gray: #e8e8e4;
+–mid-gray:   #b0b0a8;
+–soft-gray:  #787870;
+–neon:       #5BDB3E;
+–neon-glow:  0 0 14px rgba(91,219,62,0.28);
+–serif: ‘Cormorant Garamond’, Georgia, serif;
+–sans:  ‘DM Sans’, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+background: var(–white);
+color: var(–black);
+font-family: var(–sans);
+font-weight: 300;
+line-height: 1.6;
+overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(–black); }
+::-webkit-scrollbar-thumb { background: var(–neon); }
+
+/* ── NAV ── */
+nav {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 1.3rem 3.5rem;
+background: rgba(8,8,8,0.97);
+backdrop-filter: blur(14px);
+border-bottom: 1px solid #222;
+}
+
+.nav-logo {
+font-family: var(–serif);
+font-size: 1.6rem;
+font-weight: 600;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+color: var(–white);
+text-decoration: none;
+}
+.nav-logo span { color: var(–neon); }
+
+.nav-links { display: flex; gap: 2.8rem; list-style: none; }
+
+.nav-links a {
+font-size: 0.75rem;
+font-weight: 400;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: var(–mid-gray);
+text-decoration: none;
+transition: color 0.2s;
+position: relative;
+}
+.nav-links a::after {
+content: ‘’;
+position: absolute;
+bottom: -4px; left: 0;
+width: 0; height: 1px;
+background: var(–neon);
+transition: width 0.25s;
+}
+.nav-links a:hover { color: var(–white); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-cta {
+font-family: var(–sans);
+font-size: 0.75rem;
+font-weight: 600;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: var(–black);
+background: var(–neon);
+border: none;
+padding: 0.7rem 1.8rem;
+cursor: pointer;
+text-decoration: none;
+transition: all 0.2s;
+box-shadow: var(–neon-glow);
+display: inline-block;
+}
+.nav-cta:hover { background: #fff; box-shadow: 0 0 24px rgba(91,219,62,0.45); }
+
+/* ── HERO ── */
+.hero {
+min-height: 100vh;
+background: var(–black);
+display: flex;
+flex-direction: column;
+justify-content: center;
+padding: 11rem 3.5rem 7rem;
+position: relative;
+overflow: hidden;
+}
+
+.hero-grid {
+position: absolute; inset: 0;
+background-image:
+linear-gradient(rgba(91,219,62,0.035) 1px, transparent 1px),
+linear-gradient(90deg, rgba(91,219,62,0.035) 1px, transparent 1px);
+background-size: 60px 60px;
+pointer-events: none;
+}
+
+.hero-glow {
+position: absolute;
+width: 700px; height: 700px;
+border-radius: 50%;
+background: radial-gradient(circle, rgba(91,219,62,0.06) 0%, transparent 70%);
+top: -150px; right: -150px;
+pointer-events: none;
+}
+
+.hero-eyebrow {
+font-size: 0.72rem;
+letter-spacing: 0.24em;
+text-transform: uppercase;
+color: var(–neon);
+margin-bottom: 2rem;
+opacity: 0;
+animation: fadeUp 0.7s 0.2s forwards;
+display: flex;
+align-items: center;
+gap: 0.8rem;
+position: relative;
+}
+.hero-eyebrow::before {
+content: ‘’;
+display: inline-block;
+width: 32px; height: 1px;
+background: var(–neon);
+}
+
+.hero-headline {
+font-family: var(–serif);
+font-size: clamp(3.2rem, 7.5vw, 7rem);
+font-weight: 300;
+line-height: 1.06;
+color: var(–white);
+max-width: 900px;
+margin-bottom: 2.2rem;
+opacity: 0;
+animation: fadeUp 0.7s 0.35s forwards;
+position: relative;
+}
+.hero-headline em { font-style: italic; color: var(–neon); text-shadow: var(–neon-glow); }
+
+.hero-sub {
+font-size: 1.05rem;
+color: #aaa;
+max-width: 520px;
+line-height: 1.8;
+margin-bottom: 3.2rem;
+opacity: 0;
+animation: fadeUp 0.7s 0.5s forwards;
+font-weight: 300;
+position: relative;
+}
+
+.hero-actions {
+display: flex;
+gap: 1.2rem;
+flex-wrap: wrap;
+opacity: 0;
+animation: fadeUp 0.7s 0.65s forwards;
+position: relative;
+}
+
+.btn-primary {
+font-family: var(–sans);
+font-size: 0.78rem;
+font-weight: 600;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: var(–black);
+background: var(–neon);
+border: 1px solid var(–neon);
+padding: 1.05rem 2.6rem;
+cursor: pointer;
+text-decoration: none;
+transition: all 0.2s;
+display: inline-block;
+box-shadow: var(–neon-glow);
+}
+.btn-primary:hover { background: var(–white); border-color: var(–white); }
+
+.btn-secondary {
+font-family: var(–sans);
+font-size: 0.78rem;
+font-weight: 500;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: var(–white);
+background: transparent;
+border: 1px solid #333;
+padding: 1.05rem 2.6rem;
+cursor: pointer;
+text-decoration: none;
+transition: all 0.2s;
+display: inline-block;
+}
+.btn-secondary:hover { border-color: var(–neon); color: var(–neon); }
+
+.hero-stats {
+display: flex;
+gap: 3rem;
+margin-top: 5rem;
+padding-top: 3rem;
+border-top: 1px solid #1e1e1e;
+opacity: 0;
+animation: fadeUp 0.7s 0.8s forwards;
+flex-wrap: wrap;
+position: relative;
+}
+
+.stat-num { font-family: var(–serif); font-size: 2.2rem; font-weight: 400; color: var(–neon); line-height: 1; margin-bottom: 0.3rem; text-shadow: var(–neon-glow); }
+.stat-label { font-size: 0.72rem; color: #555; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ── MISSION ── */
+.mission {
+padding: 9rem 3.5rem;
+background: var(–white);
+display: grid;
+grid-template-columns: 200px 1fr;
+gap: 7rem;
+align-items: start;
+}
+
+.section-label { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(–soft-gray); padding-top: 0.6rem; }
+.section-label.neon { color: var(–neon); }
+
+.mission-content h2 { font-family: var(–serif); font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 400; line-height: 1.15; color: var(–black); margin-bottom: 2rem; }
+.mission-content p { font-size: 1rem; color: #444; line-height: 1.9; margin-bottom: 1.4rem; font-weight: 300; }
+
+.mission-pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(–light-gray); border: 1px solid var(–light-gray); margin-top: 3.5rem; }
+
+.pillar { background: var(–white); padding: 2.2rem 2rem; transition: background 0.2s; }
+.pillar:hover { background: var(–off-white); }
+.pillar-num { font-size: 0.72rem; font-weight: 500; color: var(–neon); letter-spacing: 0.1em; margin-bottom: 1rem; }
+.pillar h4 { font-size: 0.95rem; font-weight: 600; color: var(–black); margin-bottom: 0.6rem; }
+.pillar p { font-size: 0.85rem; color: #555; line-height: 1.75; font-weight: 300; }
+
+/* ── SERVICES ── */
+.services { background: var(–black); padding: 9rem 3.5rem; }
+
+.services-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5rem; flex-wrap: wrap; gap: 1rem; }
+.services-header h2 { font-family: var(–serif); font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 300; color: var(–white); }
+
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1px; background: #1e1e1e; border: 1px solid #1e1e1e; }
+
+.service-card { background: var(–off-black); padding: 3rem 2.6rem; position: relative; transition: background 0.25s; overflow: hidden; }
+.service-card::before { content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(–neon); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+.service-card:hover { background: #141414; }
+.service-card:hover::before { transform: scaleX(1); }
+
+.service-tag { font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(–neon); margin-bottom: 1.4rem; display: flex; align-items: center; gap: 0.5rem; }
+.service-tag::before { content: ‘’; width: 18px; height: 1px; background: var(–neon); opacity: 0.5; }
+.service-card h3 { font-family: var(–serif); font-size: 1.6rem; font-weight: 400; color: var(–white); margin-bottom: 1rem; line-height: 1.2; }
+.service-card > p { font-size: 0.88rem; color: #888; line-height: 1.8; margin-bottom: 2rem; font-weight: 300; }
+
+.service-includes { list-style: none; margin-bottom: 2.5rem; }
+.service-includes li { font-size: 0.82rem; color: #777; padding: 0.5rem 0; border-bottom: 1px solid #1e1e1e; display: flex; align-items: center; gap: 0.7rem; font-weight: 300; }
+.service-includes li::before { content: ‘’; width: 5px; height: 5px; background: var(–neon); border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 6px rgba(91,219,62,0.45); }
+
+.service-price { font-family: var(–serif); font-size: 2rem; font-weight: 300; color: var(–white); }
+.service-price span { font-family: var(–sans); font-size: 0.75rem; color: #555; font-weight: 300; }
+
+/* ── PROCESS ── */
+.process { padding: 9rem 3.5rem; background: var(–off-white); }
+.process-top { margin-bottom: 5rem; }
+.process h2 { font-family: var(–serif); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 400; color: var(–black); max-width: 480px; line-height: 1.2; margin-top: 1rem; }
+
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 3rem; position: relative; }
+.step-dot { width: 12px; height: 12px; background: var(–neon); border-radius: 50%; margin-bottom: 1.5rem; box-shadow: 0 0 10px rgba(91,219,62,0.35); }
+.step-num { font-size: 0.7rem; font-weight: 500; color: var(–neon); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.8rem; }
+.step h4 { font-size: 1rem; font-weight: 600; color: var(–black); margin-bottom: 0.6rem; }
+.step p { font-size: 0.875rem; color: #555; line-height: 1.75; font-weight: 300; }
+
+/* ── LANDING INTAKE (original express interest form) ── */
+.intake {
+padding: 9rem 3.5rem;
+background: var(–white);
+display: grid;
+grid-template-columns: 1fr 1.5fr;
+gap: 9rem;
+align-items: start;
+}
+
+.intake-info h2 { font-family: var(–serif); font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 400; color: var(–black); line-height: 1.2; margin-bottom: 1.8rem; }
+.intake-info p { font-size: 0.975rem; color: #444; line-height: 1.85; margin-bottom: 1.2rem; font-weight: 300; }
+
+.intake-note { margin-top: 2.8rem; padding: 1.6rem; border-left: 3px solid var(–neon); background: var(–off-white); }
+.intake-note p { font-size: 0.875rem; color: #555; margin: 0; line-height: 1.7; }
+.intake-note strong { color: var(–black); font-weight: 600; }
+
+/* ── FORMS (shared base styles) ── */
+.form-group { margin-bottom: 1.6rem; }
+
+label {
+display: block;
+font-size: 0.7rem;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+color: #555;
+margin-bottom: 0.55rem;
+font-weight: 500;
+}
+
+input[type=“text”],
+input[type=“email”],
+input[type=“tel”],
+input[type=“number”],
+select,
+textarea {
+width: 100%;
+font-family: var(–sans);
+font-size: 0.95rem;
+font-weight: 400;
+color: var(–black);
+background: var(–off-white);
+border: 1px solid var(–light-gray);
+padding: 0.9rem 1.1rem;
+outline: none;
+transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+appearance: none;
+border-radius: 0;
+}
+
+input:focus, select:focus, textarea:focus {
+border-color: var(–neon);
+background: var(–white);
+box-shadow: 0 0 0 3px rgba(91,219,62,0.07);
+}
+
+input::placeholder, textarea::placeholder { color: #bbb; }
+
+select {
+background-image: url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘12’ height=‘8’ viewBox=‘0 0 12 8’%3E%3Cpath d=‘M1 1l5 5 5-5’ stroke=’%23999’ stroke-width=‘1.5’ fill=‘none’/%3E%3C/svg%3E”);
+background-repeat: no-repeat;
+background-position: right 1.1rem center;
+background-color: var(–off-white);
+padding-right: 2.5rem;
+cursor: pointer;
+}
+
+textarea { resize: vertical; min-height: 110px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+.checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-top: 0.5rem; }
+
+.checkbox-item { display: flex; align-items: center; gap: 0.7rem; cursor: pointer; padding: 0.75rem 1rem; border: 1px solid var(–light-gray); background: var(–off-white); transition: all 0.2s; }
+.checkbox-item:hover { border-color: var(–neon); background: rgba(91,219,62,0.035); }
+.checkbox-item input[type=“checkbox”] { width: 15px; height: 15px; flex-shrink: 0; accent-color: var(–neon); cursor: pointer; border: none; padding: 0; background: transparent; }
+.checkbox-item span { font-size: 0.8rem; color: var(–black); font-weight: 400; line-height: 1.3; }
+
+.submit-btn {
+width: 100%;
+font-family: var(–sans);
+font-size: 0.8rem;
+font-weight: 600;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+color: var(–black);
+background: var(–neon);
+border: none;
+padding: 1.2rem;
+cursor: pointer;
+margin-top: 1.2rem;
+transition: all 0.2s;
+box-shadow: var(–neon-glow);
+}
+.submit-btn:hover { background: #fff; box-shadow: 0 0 28px rgba(91,219,62,0.3); }
+
+.form-success { display: none; text-align: center; padding: 4rem 2rem; border: 1px solid var(–light-gray); background: var(–off-white); }
+.success-icon { font-size: 2.5rem; margin-bottom: 1.2rem; display: block; color: var(–neon); }
+.form-success h3 { font-family: var(–serif); font-size: 2.2rem; font-weight: 400; color: var(–black); margin-bottom: 0.8rem; }
+.form-success p { font-size: 0.9rem; color: #666; line-height: 1.75; }
+
+/* ── INTAKE DEEP-DIVE BUTTON ── */
+.intake-deepdive {
+margin-top: 2rem;
+padding: 2rem;
+border: 1px solid var(–light-gray);
+background: var(–off-white);
+text-align: center;
+}
+.intake-deepdive p {
+font-size: 0.85rem;
+color: #555;
+margin-bottom: 1.2rem;
+line-height: 1.7;
+}
+.intake-deepdive strong { color: var(–black); }
+.btn-deepdive {
+font-family: var(–sans);
+font-size: 0.75rem;
+font-weight: 600;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: var(–black);
+background: var(–neon);
+border: none;
+padding: 0.9rem 2rem;
+cursor: pointer;
+transition: all 0.2s;
+box-shadow: var(–neon-glow);
+display: inline-block;
+text-decoration: none;
+}
+.btn-deepdive:hover { background: var(–white); }
+
+/* ── TESTIMONIALS ── */
+.testimonials { background: var(–black); padding: 9rem 3.5rem; }
+.testimonials-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5rem; flex-wrap: wrap; gap: 1rem; }
+.testimonials-header h2 { font-family: var(–serif); font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 300; color: var(–white); }
+
+.testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: #1e1e1e; border: 1px solid #1e1e1e; }
+.testimonial-card { background: var(–off-black); padding: 2.8rem 2.4rem; display: flex; flex-direction: column; gap: 1.8rem; transition: background 0.2s; }
+.testimonial-card:hover { background: #141414; }
+.testimonial-quote { font-family: var(–serif); font-size: 1.15rem; font-weight: 300; font-style: italic; color: #ccc; line-height: 1.75; position: relative; padding-top: 1.2rem; }
+.testimonial-quote::before { content: ‘\201C’; position: absolute; top: -0.6rem; left: -0.2rem; font-family: var(–serif); font-size: 4rem; color: var(–neon); line-height: 1; opacity: 0.5; }
+.testimonial-author { display: flex; align-items: center; gap: 1rem; border-top: 1px solid #1e1e1e; padding-top: 1.4rem; }
+.author-avatar { width: 42px; height: 42px; border-radius: 50%; background: #1e1e1e; display: flex; align-items: center; justify-content: center; font-family: var(–serif); font-size: 1.1rem; color: var(–neon); font-weight: 400; flex-shrink: 0; border: 1px solid #2a2a2a; }
+.author-info { flex: 1; }
+.author-name { font-size: 0.85rem; font-weight: 600; color: var(–white); margin-bottom: 0.2rem; }
+.author-detail { font-size: 0.75rem; color: #555; letter-spacing: 0.06em; }
+.testimonial-stars { color: var(–neon); font-size: 0.75rem; letter-spacing: 0.1em; margin-top: auto; }
+
+/* ── BOOKING BANNER ── */
+.booking-banner { background: var(–neon); padding: 5rem 3.5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+.booking-text h2 { font-family: var(–serif); font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 400; color: var(–black); line-height: 1.2; margin-bottom: 0.6rem; }
+.booking-text p { font-size: 0.9rem; color: rgba(0,0,0,0.6); font-weight: 400; }
+.booking-btn { font-family: var(–sans); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(–neon); background: var(–black); border: none; padding: 1.1rem 2.8rem; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.6rem; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+.booking-btn:hover { background: #1a1a1a; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+.booking-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* ── SOCIAL ── */
+.social-links { display: flex; gap: 0.8rem; align-items: center; }
+.social-link { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border: 1px solid #2a2a2a; color: #555; text-decoration: none; transition: all 0.2s; }
+.social-link:hover { border-color: var(–neon); color: var(–neon); background: rgba(91,219,62,0.06); }
+.social-link svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* ── FOOTER ── */
+footer { background: var(–black); padding: 5rem 3.5rem 3rem; }
+.footer-top { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 3rem; border-bottom: 1px solid #1e1e1e; flex-wrap: wrap; gap: 2rem; }
+.footer-logo { font-family: var(–serif); font-size: 1.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(–white); margin-bottom: 0.4rem; }
+.footer-logo span { color: var(–neon); }
+.footer-tagline { font-size: 0.78rem; color: #444; letter-spacing: 0.06em; }
+.footer-links { display: flex; gap: 2.5rem; list-style: none; flex-wrap: wrap; }
+.footer-links a { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: #555; text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(–neon); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; flex-wrap: wrap; gap: 1rem; }
+.footer-copy { font-size: 0.72rem; color: #2e2e2e; }
+.footer-ig { font-size: 0.72rem; color: #444; text-decoration: none; transition: color 0.2s; }
+.footer-ig:hover { color: var(–neon); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ────────────────────────────────────────────
+INTELLIGENCE INTAKE OVERLAY
+──────────────────────────────────────────── */
+.intake-overlay {
+display: none;
+position: fixed;
+inset: 0;
+z-index: 200;
+background: #0A0A0A;
+overflow-y: auto;
+}
+.intake-overlay.open { display: block; }
+
+/* Intake CSS variables scoped inside overlay */
+.intake-overlay {
+–io-green: #5BDB3E;
+–io-green-dim: rgba(91,219,62,0.08);
+–io-green-border: rgba(91,219,62,0.25);
+–io-white: #F5F5F2;
+–io-card: #181818;
+–io-rule: #222222;
+–io-muted: #555;
+–io-text: #C8C8C4;
+–io-radius: 2px;
+}
+
+.io-progress-bar-wrap { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: #1A1A1A; z-index: 300; }
+.io-progress-bar-fill { height: 100%; background: var(–io-green); transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+
+.io-shell { max-width: 720px; margin: 0 auto; padding: 80px 32px 120px; }
+
+.io-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 64px; padding-bottom: 24px; border-bottom: 1px solid var(–io-rule); }
+
+.io-wordmark { font-family: ‘Playfair Display’, serif; font-weight: 900; font-size: 14px; letter-spacing: 0.22em; text-transform: uppercase; color: var(–io-white); }
+.io-wordmark span { color: var(–io-green); }
+
+.io-close {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(–io-muted);
+background: none;
+border: none;
+cursor: pointer;
+padding: 8px 0;
+transition: color 0.2s;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.io-close:hover { color: var(–io-white); }
+
+.io-step-counter { font-family: ‘DM Mono’, monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(–io-muted); }
+.io-step-counter strong { color: var(–io-green); font-weight: 500; }
+
+.io-section { display: none; animation: ioFadeUp 0.4s ease forwards; }
+.io-section.active { display: block; }
+
+@keyframes ioFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+.io-eyebrow { font-family: ‘DM Mono’, monospace; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(–io-green); margin-bottom: 16px; }
+.io-title { font-family: ‘Playfair Display’, serif; font-weight: 900; font-size: 36px; line-height: 1.1; color: var(–io-white); margin-bottom: 12px; }
+.io-sub { font-size: 14px; font-weight: 300; line-height: 1.7; color: var(–io-muted); margin-bottom: 40px; max-width: 540px; }
+
+.io-opening-title { font-family: ‘Playfair Display’, serif; font-weight: 900; font-size: 44px; line-height: 1.05; color: var(–io-white); margin-bottom: 10px; }
+.io-opening-title em { font-style: italic; color: var(–io-green); }
+.io-opening-rule { width: 40px; height: 2px; background: var(–io-green); margin: 28px 0; }
+.io-opening-body { font-size: 15px; font-weight: 300; line-height: 1.8; color: var(–io-muted); max-width: 520px; margin-bottom: 48px; }
+
+.io-field-group { margin-bottom: 28px; }
+.io-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.io-field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+.io-label { display: block; font-family: ‘DM Mono’, monospace; font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(–io-muted); margin-bottom: 8px; }
+
+.io-input {
+width: 100%; background: var(–io-card); border: 1px solid var(–io-rule); color: var(–io-white);
+font-family: ‘DM Sans’, sans-serif; font-size: 14px; font-weight: 300; padding: 14px 16px;
+border-radius: var(–io-radius); outline: none; transition: border-color 0.2s, background 0.2s;
+-webkit-appearance: none; appearance: none;
+}
+.io-input:focus { border-color: var(–io-green); background: #1C1C1C; }
+.io-input::placeholder { color: #333; }
+.io-textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+
+.io-q-card { background: var(–io-card); border: 1px solid var(–io-rule); padding: 28px 28px 24px; margin-bottom: 24px; border-radius: var(–io-radius); position: relative; }
+.io-q-card::before { content: ‘’; position: absolute; top: 0; left: 0; width: 2px; height: 100%; background: var(–io-rule); border-radius: 2px 0 0 2px; transition: background 0.2s; }
+.io-q-card:focus-within::before { background: var(–io-green); }
+.io-q-num { font-family: ‘DM Mono’, monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(–io-green); margin-bottom: 10px; }
+.io-q-text { font-family: ‘Playfair Display’, serif; font-weight: 700; font-size: 17px; line-height: 1.4; color: var(–io-white); margin-bottom: 6px; }
+.io-q-hint { font-size: 12px; font-weight: 300; color: var(–io-muted); margin-bottom: 18px; line-height: 1.5; }
+.io-q-hint strong { color: var(–io-green); font-weight: 500; }
+.io-q-card .io-input { background: #111; border-color: #2A2A2A; }
+
+.io-radio-group { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.io-radio-option { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: #111; border: 1px solid #2A2A2A; border-radius: var(–io-radius); cursor: pointer; transition: border-color 0.2s, background 0.2s; user-select: none; }
+.io-radio-option:hover { border-color: #3A3A3A; background: #161616; }
+.io-radio-option input[type=“radio”] { display: none; }
+.io-radio-dot { width: 16px; height: 16px; border: 1px solid #3A3A3A; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s; }
+.io-radio-dot::after { content: ‘’; width: 8px; height: 8px; border-radius: 50%; background: var(–io-green); opacity: 0; transition: opacity 0.15s; }
+.io-radio-option.selected { border-color: var(–io-green-border); background: var(–io-green-dim); }
+.io-radio-option.selected .io-radio-dot { border-color: var(–io-green); }
+.io-radio-option.selected .io-radio-dot::after { opacity: 1; }
+.io-radio-label { display: flex; align-items: center; gap: 12px; flex: 1; font-size: 13.5px; font-weight: 400; color: var(–io-text); cursor: pointer; }
+
+.io-filter-callout { background: var(–io-green-dim); border: 1px solid var(–io-green-border); padding: 14px 18px; margin-bottom: 24px; border-radius: var(–io-radius); }
+.io-filter-callout p { font-family: ‘DM Mono’, monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(–io-green); line-height: 1.6; }
+
+.io-final-screen { text-align: center; padding: 40px 0; }
+.io-final-check { width: 64px; height: 64px; border: 1px solid var(–io-green-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 32px; background: var(–io-green-dim); }
+.io-final-check svg { width: 28px; height: 28px; }
+.io-final-title { font-family: ‘Playfair Display’, serif; font-weight: 900; font-size: 32px; line-height: 1.15; color: var(–io-white); margin-bottom: 20px; }
+.io-final-title em { font-style: italic; color: var(–io-green); }
+.io-final-body { font-size: 14px; font-weight: 300; line-height: 1.8; color: var(–io-muted); max-width: 440px; margin: 0 auto; }
+
+.io-nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 48px; padding-top: 28px; border-top: 1px solid var(–io-rule); }
+
+.io-btn-back { background: none; border: none; font-family: ‘DM Mono’, monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(–io-muted); cursor: pointer; padding: 12px 0; transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
+.io-btn-back:hover { color: var(–io-white); }
+.io-btn-back.hidden { visibility: hidden; }
+
+.io-btn-next { background: var(–io-green); border: none; color: #0A0A0A; font-family: ‘DM Mono’, monospace; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; padding: 14px 32px; cursor: pointer; border-radius: var(–io-radius); transition: opacity 0.2s, transform 0.15s; display: flex; align-items: center; gap: 10px; }
+.io-btn-next:hover { opacity: 0.88; transform: translateY(-1px); }
+.io-btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.io-dots { display: flex; gap: 6px; align-items: center; }
+.io-dot { width: 5px; height: 5px; border-radius: 50%; background: var(–io-rule); transition: background 0.3s, width 0.3s; }
+.io-dot.active { background: var(–io-green); width: 18px; border-radius: 3px; }
+.io-dot.done { background: #2A3E27; }
+
+.io-error-msg { font-family: ‘DM Mono’, monospace; font-size: 10px; letter-spacing: 0.12em; color: #E05555; margin-top: 16px; display: none; text-align: right; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+nav { padding: 1.2rem 1.6rem; }
+.nav-links { display: none; }
+.hero { padding: 8rem 1.6rem 5rem; }
+.mission { grid-template-columns: 1fr; gap: 2rem; padding: 5rem 1.6rem; }
+.mission-pillars { grid-template-columns: 1fr; }
+.services { padding: 5rem 1.6rem; }
+.services-header { flex-direction: column; align-items: flex-start; }
+.process { padding: 5rem 1.6rem; }
+.intake { grid-template-columns: 1fr; gap: 3.5rem; padding: 5rem 1.6rem; }
+.form-row { grid-template-columns: 1fr; }
+.checkbox-group { grid-template-columns: 1fr; }
+footer { padding: 4rem 1.6rem 2.5rem; }
+.testimonials { padding: 5rem 1.6rem; }
+.booking-banner { padding: 4rem 1.6rem; flex-direction: column; align-items: flex-start; }
+.io-shell { padding: 60px 20px 100px; }
+.io-field-row, .io-field-row-3 { grid-template-columns: 1fr; }
+.io-opening-title, .io-title { font-size: 30px; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     INTELLIGENCE INTAKE OVERLAY
+══════════════════════════════════════════ -->
+
+<div class="intake-overlay" id="intakeOverlay">
+
+  <div class="io-progress-bar-wrap">
+    <div class="io-progress-bar-fill" id="ioProgressBar" style="width:0%"></div>
+  </div>
+
+  <div class="io-shell">
+
+```
+<header class="io-header">
+  <div class="io-wordmark">Stride<span>Mark</span> Group</div>
+  <div style="display:flex;align-items:center;gap:24px;">
+    <div class="io-step-counter" id="ioStepLabel">Intake Form</div>
+    <button class="io-close" onclick="closeIntake()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Close
+    </button>
+  </div>
+</header>
+
+<form id="ioForm" action="https://formspree.io/f/xbdppngr" method="POST">
+  <input type="hidden" name="_subject" value="New SMG Athlete Intelligence Intake" />
+
+  <!-- SECTION 0: OPENING -->
+  <div class="io-section active" id="io-0">
+    <div class="io-eyebrow">Athlete Intelligence Intake</div>
+    <h1 class="io-opening-title">StrideMark —<br><em>Athlete Intelligence</em><br>Intake</h1>
+    <div class="io-opening-rule"></div>
+    <p class="io-opening-body">
+      This is not a registration form.<br>
+      This is how we understand how you're currently thinking about your athlete.
+    </p>
+    <div class="io-nav-row">
+      <span class="io-btn-back hidden"></span>
+      <button type="button" class="io-btn-next" onclick="ioGoTo(1)">
+        Begin
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- SECTION 1: ATHLETE SNAPSHOT -->
+  <div class="io-section" id="io-1">
+    <div class="io-eyebrow">Section 01</div>
+    <h2 class="io-title">Athlete Snapshot</h2>
+    <p class="io-sub">Basic context on your athlete. Be specific — this shapes everything that follows.</p>
+
+    <div class="io-field-row">
+      <div class="io-field-group">
+        <label class="io-label" for="io_athlete_name">Athlete Name</label>
+        <input class="io-input" type="text" id="io_athlete_name" name="athlete_name" placeholder="First and last name" />
+      </div>
+      <div class="io-field-group">
+        <label class="io-label" for="io_sport">Sport</label>
+        <input class="io-input" type="text" id="io_sport" name="sport" placeholder="e.g. Track & Field, Basketball" />
+      </div>
+    </div>
+    <div class="io-field-row-3">
+      <div class="io-field-group">
+        <label class="io-label" for="io_age">Age</label>
+        <input class="io-input" type="text" id="io_age" name="age" placeholder="e.g. 15" />
+      </div>
+      <div class="io-field-group">
+        <label class="io-label" for="io_grade">Grade</label>
+        <input class="io-input" type="text" id="io_grade" name="grade" placeholder="e.g. 9th" />
+      </div>
+      <div class="io-field-group">
+        <label class="io-label" for="io_position">Primary Event / Position</label>
+        <input class="io-input" type="text" id="io_position" name="primary_event_position" placeholder="e.g. 400m, Point Guard" />
+      </div>
+    </div>
+    <div class="io-field-group">
+      <label class="io-label" for="io_team">Current Team / Training Environment</label>
+      <input class="io-input" type="text" id="io_team" name="team_training_environment" placeholder="Club, school team, private facility — describe where they train" />
+    </div>
+
+    <div class="io-nav-row">
+      <button type="button" class="io-btn-back" onclick="ioGoTo(0)">
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M13 5H1M6 1L1 5l5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back
+      </button>
+      <div class="io-dots" id="io-dots-1"></div>
+      <button type="button" class="io-btn-next" onclick="ioGoTo(2)">Next<svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- SECTION 2: CURRENT THINKING -->
+  <div class="io-section" id="io-2">
+    <div class="io-eyebrow">Section 02</div>
+    <h2 class="io-title">Current Thinking</h2>
+    <p class="io-sub">There are no wrong answers here. We're reading how you're orienting right now — not testing you.</p>
+
+    <div class="io-q-card">
+      <div class="io-q-num">Q1</div>
+      <div class="io-q-text">In your own words, what does NIL mean for your athlete?</div>
+      <textarea class="io-input io-textarea" name="q1_nil_meaning" placeholder="Write freely — your current understanding, not what you think we want to hear..."></textarea>
+    </div>
+    <div class="io-q-card">
+      <div class="io-q-num">Q2</div>
+      <div class="io-q-text">If your athlete received $500 tomorrow tied to their name or performance, what would you want them to do with it?</div>
+      <textarea class="io-input io-textarea" name="q2_500_dollars" placeholder="Think through this one — the answer reveals a lot..."></textarea>
+    </div>
+    <div class="io-q-card">
+      <div class="io-q-num">Q3</div>
+      <div class="io-q-text">What decisions do you feel least prepared to make right now as it relates to your athlete's future?</div>
+      <textarea class="io-input io-textarea" name="q3_least_prepared" placeholder="Be honest — this is exactly what we work on..."></textarea>
+    </div>
+
+    <div class="io-nav-row">
+      <button type="button" class="io-btn-back" onclick="ioGoTo(1)"><svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M13 5H1M6 1L1 5l5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <div class="io-dots" id="io-dots-2"></div>
+      <button type="button" class="io-btn-next" onclick="ioGoTo(3)">Next<svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- SECTION 3: IDENTITY & POSITIONING -->
+  <div class="io-section" id="io-3">
+    <div class="io-eyebrow">Section 03</div>
+    <h2 class="io-title">Identity &amp; Positioning</h2>
+    <p class="io-sub">How you see your athlete shapes every positioning decision we make together.</p>
+
+    <div class="io-q-card">
+      <div class="io-q-num">Q4</div>
+      <div class="io-q-text">What do you believe currently defines your athlete the most?</div>
+      <div class="io-q-hint">Performance, personality, presence, discipline, something else — explain in your own words.</div>
+      <textarea class="io-input io-textarea" name="q4_defines_athlete" placeholder="Go beyond the sport — what makes them them?"></textarea>
+    </div>
+    <div class="io-q-card">
+      <div class="io-q-num">Q5</div>
+      <div class="io-q-text">Where do you feel your athlete is currently overlooked, misunderstood, or undervalued?</div>
+      <textarea class="io-input io-textarea" name="q5_overlooked" placeholder="By coaches, media, peers, institutions — be specific if you can..."></textarea>
+    </div>
+
+    <div class="io-nav-row">
+      <button type="button" class="io-btn-back" onclick="ioGoTo(2)"><svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M13 5H1M6 1L1 5l5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <div class="io-dots" id="io-dots-3"></div>
+      <button type="button" class="io-btn-next" onclick="ioGoTo(4)">Next<svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- SECTION 4: BEHAVIOR & ENVIRONMENT -->
+  <div class="io-section" id="io-4">
+    <div class="io-eyebrow">Section 04</div>
+    <h2 class="io-title">Behavior &amp; Environment</h2>
+    <p class="io-sub">The environment your athlete moves in tells us more than any résumé.</p>
+
+    <div class="io-q-card">
+      <div class="io-q-num">Q6</div>
+      <div class="io-q-text">What brands, gear, or environments does your athlete naturally gravitate toward right now?</div>
+      <div class="io-q-hint"><strong>→ This is your Pre-NIL signal capture — don't skip this.</strong></div>
+      <textarea class="io-input io-textarea" name="q6_brand_signals" placeholder="Specific brands, gear preferences, spaces, aesthetics, media they consume..."></textarea>
+    </div>
+    <div class="io-q-card">
+      <div class="io-q-num">Q7</div>
+      <div class="io-q-text">Who or what currently influences how your athlete thinks about success?</div>
+      <textarea class="io-input io-textarea" name="q7_influences" placeholder="Athletes, coaches, content creators, family members, something else entirely..."></textarea>
+    </div>
+
+    <div class="io-nav-row">
+      <button type="button" class="io-btn-back" onclick="ioGoTo(3)"><svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M13 5H1M6 1L1 5l5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <div class="io-dots" id="io-dots-4"></div>
+      <button type="button" class="io-btn-next" onclick="ioGoTo(5)">Next<svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- SECTION 5: TIMING & INTENT -->
+  <div class="io-section" id="io-5">
+    <div class="io-eyebrow">Section 05</div>
+    <h2 class="io-title">Timing &amp; Intent</h2>
+    <p class="io-sub">Why now matters. We want to understand what brought you here at this moment.</p>
+
+    <div class="io-q-card">
+      <div class="io-q-num">Q8</div>
+      <div class="io-q-text">Why are you interested in StrideMark at this moment?</div>
+      <textarea class="io-input io-textarea" name="q8_why_now" placeholder="What happened — or what are you anticipating — that made this feel timely?"></textarea>
+    </div>
+    <div class="io-q-card">
+      <div class="io-q-num">Q9</div>
+      <div class="io-q-text">What would a "successful outcome" from something like this look like for your family?</div>
+      <textarea class="io-input io-textarea" name="q9_success_definition" placeholder="Define success in your own terms — not ours..."></textarea>
+    </div>
+
+    <div class="io-nav-row">
+      <button type="button" class="io-btn-back" onclick="ioGoTo(4)"><svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M13 5H1M6 1L1 5l5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <div class="io-dots" id="io-dots-5"></div>
+      <button type="button" class="io-btn-next" onclick="ioGoTo(6)">Next<svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- SECTION 6: FILTER -->
+  <div class="io-section" id="io-6">
+    <div class="io-eyebrow">Section 06 — Critical</div>
+    <h2 class="io-title">Alignment Filter</h2>
+    <p class="io-sub">This one matters. Answer honestly — there's no penalty for where you are right now.</p>
+
+    <div class="io-filter-callout">
+      <p>StrideMark focuses on long-term positioning, not short-term exposure or quick visibility.</p>
+    </div>
+
+    <div class="io-q-card">
+      <div class="io-q-num">Q10</div>
+      <div class="io-q-text">Which best describes you?</div>
+      <div class="io-radio-group" id="io-q10-group">
+        <label class="io-radio-option" onclick="ioSelectRadio('io-q10-group', this)">
+          <input type="radio" name="q10_alignment" value="This is exactly what we're looking for" />
+          <span class="io-radio-label"><span class="io-radio-dot"></span>This is exactly what we're looking for</span>
+        </label>
+        <label class="io-radio-option" onclick="ioSelectRadio('io-q10-group', this)">
+          <input type="radio" name="q10_alignment" value="We're still learning what this means" />
+          <span class="io-radio-label"><span class="io-radio-dot"></span>We're still learning what this means</span>
+        </label>
+        <label class="io-radio-option" onclick="ioSelectRadio('io-q10-group', this)">
+          <input type="radio" name="q10_alignment" value="We're more focused on exposure right now" />
+          <span class="io-radio-label"><span class="io-radio-dot"></span>We're more focused on exposure right now</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="io-nav-row">
+      <button type="button" class="io-btn-back" onclick="ioGoTo(5)"><svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M13 5H1M6 1L1 5l5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <div class="io-dots" id="io-dots-6"></div>
+      <button type="button" class="io-btn-next" onclick="ioGoTo(7)">Next<svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- SECTION 7: COMMITMENT -->
+  <div class="io-section" id="io-7">
+    <div class="io-eyebrow">Section 07</div>
+    <h2 class="io-title">Commitment</h2>
+    <p class="io-sub">This work requires you to be active, not passive. We need to know where you stand.</p>
+
+    <div class="io-q-card">
+      <div class="io-q-num">Q11</div>
+      <div class="io-q-text">This process requires active parent involvement. Are you prepared to operate as a strategist in your athlete's development?</div>
+      <div class="io-radio-group" id="io-q11-group">
+        <label class="io-radio-option" onclick="ioSelectRadio('io-q11-group', this)">
+          <input type="radio" name="q11_commitment" value="Yes" />
+          <span class="io-radio-label"><span class="io-radio-dot"></span>Yes</span>
+        </label>
+        <label class="io-radio-option" onclick="ioSelectRadio('io-q11-group', this)">
+          <input type="radio" name="q11_commitment" value="Possibly" />
+          <span class="io-radio-label"><span class="io-radio-dot"></span>Possibly</span>
+        </label>
+        <label class="io-radio-option" onclick="ioSelectRadio('io-q11-group', this)">
+          <input type="radio" name="q11_commitment" value="No" />
+          <span class="io-radio-label"><span class="io-radio-dot"></span>No</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="io-nav-row">
+      <button type="button" class="io-btn-back" onclick="ioGoTo(6)"><svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M13 5H1M6 1L1 5l5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <div class="io-dots" id="io-dots-7"></div>
+      <button type="button" id="ioSubmitBtn" class="io-btn-next" onclick="ioSubmit()">
+        Submit<svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <p class="io-error-msg" id="ioError">Something went wrong. Please check your connection and try again.</p>
+  </div>
+
+</form>
+
+<!-- SECTION 8: CONFIRMATION -->
+<div class="io-section" id="io-8">
+  <div class="io-final-screen">
+    <div class="io-final-check">
+      <svg viewBox="0 0 28 28" fill="none"><path d="M6 14l6 6 10-10" stroke="#5BDB3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2 class="io-final-title">Received.<br><em>We'll be in touch.</em></h2>
+    <p class="io-final-body">
+      We review every submission individually.<br>
+      If there's alignment, you'll be invited into a strategy session.<br><br>
+      Thank you for taking this seriously — it tells us something already.
+    </p>
+    <button type="button" class="io-btn-next" style="margin: 40px auto 0; justify-content: center;" onclick="closeIntake()">Back to Site</button>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+<!-- /INTAKE OVERLAY -->
+
+<!-- ══════════════════════════════════════════
+     MAIN LANDING PAGE
+══════════════════════════════════════════ -->
+
+<!-- NAV -->
+
+<nav>
+  <a href="#top" class="nav-logo">Stride<span>Mark</span></a>
+  <ul class="nav-links">
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#process">How It Works</a></li>
+    <li><a href="#intake">Get Started</a></li>
+  </ul>
+  <a href="#intake" class="nav-cta">Express Interest</a>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero" id="top">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <p class="hero-eyebrow">Grassroots Youth Athlete Ecosystem</p>
+  <h1 class="hero-headline">
+    Where young athletes<br/><em>build their brand</em><br/>before the world finds them.
+  </h1>
+  <p class="hero-sub">
+    StrideMark is a first-of-its-kind ecosystem studying brand loyalty in youth athletes, developing the whole athlete, and preparing families for the NIL era — before it arrives.
+  </p>
+  <div class="hero-actions">
+    <a href="#intake" class="btn-primary">Express Interest →</a>
+    <a href="#mission" class="btn-secondary">Our Mission</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-num">4</div><div class="stat-label">Core Programs</div></div>
+    <div><div class="stat-num">Pre-NIL</div><div class="stat-label">Strategy Focus</div></div>
+    <div><div class="stat-num">Family</div><div class="stat-label">First Approach</div></div>
+    <div><div class="stat-num">Grassroots</div><div class="stat-label">At Our Core</div></div>
+  </div>
+</section>
+
+<!-- MISSION -->
+
+<section class="mission" id="mission">
+  <div><p class="section-label">Our Mission</p></div>
+  <div class="mission-content">
+    <h2 class="reveal">Building the complete athlete from the ground up.</h2>
+    <p class="reveal">StrideMark exists to close the gap between raw athletic talent and real-world opportunity. We believe a young athlete's journey is about far more than performance — it's about identity, loyalty, and legacy.</p>
+    <p class="reveal">We partner with families to build a strategic foundation that positions youth athletes to enter the Name, Image, and Likeness landscape with clarity, confidence, and an entire community behind them.</p>
+    <div class="mission-pillars">
+      <div class="pillar reveal"><div class="pillar-num">01 —</div><h4>Brand Loyalty Research</h4><p>Studying how young athletes form brand relationships across sports to understand and shape lasting loyalty from the ground up.</p></div>
+      <div class="pillar reveal"><div class="pillar-num">02 —</div><h4>Athlete Development</h4><p>Holistic programs that develop the mindset, character, and competitive edge of youth athletes beyond the field of play.</p></div>
+      <div class="pillar reveal"><div class="pillar-num">03 —</div><h4>Pre-NIL Strategy</h4><p>Getting families ready for NIL opportunities long before eligibility — strategy, narrative, and positioning built early.</p></div>
+      <div class="pillar reveal"><div class="pillar-num">04 —</div><h4>Parent as Strategist</h4><p>Equipping parents with the tools and knowledge to be the most important asset in their child's athletic career.</p></div>
+    </div>
+  </div>
+</section>
+
+<div style="height:1px;background:var(--light-gray);"></div>
+
+<!-- SERVICES -->
+
+<section class="services" id="services">
+  <div class="services-header">
+    <h2 class="reveal">Programs &amp; Services</h2>
+    <p class="section-label neon">What We Offer</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <p class="service-tag">Foundation</p>
+      <h3>Athlete Identity Assessment</h3>
+      <p>A comprehensive intake evaluation profiling your child's athletic identity, brand personality, and development stage.</p>
+      <ul class="service-includes">
+        <li>1:1 athlete profile session</li><li>Brand loyalty evaluation</li><li>Sport-specific positioning report</li><li>Parent strategy briefing</li>
+      </ul>
+      <div class="service-price">$150 <span>/ one-time</span></div>
+    </div>
+    <div class="service-card reveal">
+      <p class="service-tag">Development</p>
+      <h3>Youth Athlete Development Program</h3>
+      <p>Monthly programming focused on the whole athlete — mindset, character, leadership, and performance identity.</p>
+      <ul class="service-includes">
+        <li>Monthly group sessions</li><li>Personal development curriculum</li><li>Peer cohort community</li><li>Progress tracking &amp; reporting</li>
+      </ul>
+      <div class="service-price">$75 <span>/ month</span></div>
+    </div>
+    <div class="service-card reveal">
+      <p class="service-tag">Strategy</p>
+      <h3>Pre-NIL Family Strategy</h3>
+      <p>A structured program for families ready to think ahead — building narrative, network, and positioning before eligibility.</p>
+      <ul class="service-includes">
+        <li>NIL readiness roadmap</li><li>Athlete brand narrative</li><li>Digital presence guidance</li><li>Quarterly strategy sessions</li>
+      </ul>
+      <div class="service-price">$250 <span>/ quarter</span></div>
+    </div>
+    <div class="service-card reveal">
+      <p class="service-tag">Partnership</p>
+      <h3>Parent-as-Strategist Coaching</h3>
+      <p>Dedicated coaching for parents who want to be active, informed partners in their child's long-term athletic journey.</p>
+      <ul class="service-includes">
+        <li>Bi-weekly parent coaching calls</li><li>Advocacy &amp; navigation tools</li><li>Recruiting awareness training</li><li>Private community access</li>
+      </ul>
+      <div class="service-price">$120 <span>/ month</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+
+<section class="process" id="process">
+  <div class="process-top">
+    <p class="section-label">How It Works</p>
+    <h2 class="reveal">From first step to full stride.</h2>
+  </div>
+  <div class="steps">
+    <div class="step reveal"><div class="step-dot"></div><div class="step-num">Step 01</div><h4>Express Interest</h4><p>Fill out our intake form below. Tell us about your child, their sport, and your goals as a family.</p></div>
+    <div class="step reveal"><div class="step-dot"></div><div class="step-num">Step 02</div><h4>Discovery Call</h4><p>We schedule a no-pressure call to understand your athlete's needs and recommend the right starting point.</p></div>
+    <div class="step reveal"><div class="step-dot"></div><div class="step-num">Step 03</div><h4>Assessment &amp; Placement</h4><p>Your child completes an Athlete Identity Assessment to set the foundation for everything ahead.</p></div>
+    <div class="step reveal"><div class="step-dot"></div><div class="step-num">Step 04</div><h4>Begin the Journey</h4><p>Your family joins the StrideMark ecosystem — with a plan, a team, and a community behind you.</p></div>
+  </div>
+</section>
+
+<div style="height:1px;background:var(--light-gray);"></div>
+
+<!-- INTAKE -->
+
+<section class="intake" id="intake">
+  <div class="intake-info">
+    <p class="section-label" style="margin-bottom:1.5rem;">Get Started</p>
+    <h2 class="reveal">Express interest for your athlete.</h2>
+    <p class="reveal">We work with a limited number of families per cohort to ensure every athlete receives the focused attention they deserve.</p>
+    <p class="reveal">Submit this form and a member of the StrideMark team will be in touch within 48 hours to discuss next steps.</p>
+    <div class="intake-note reveal">
+      <p><strong>No commitment required.</strong> This form is an expression of interest only. Our discovery call is complimentary and comes with zero obligation.</p>
+    </div>
+    <div class="intake-deepdive reveal">
+      <p><strong>Already decided?</strong> Skip the short form and complete our full Athlete Intelligence Intake — a deeper look at where your athlete is right now and what SMG can build with you.</p>
+      <button type="button" class="btn-deepdive" onclick="openIntake()">Begin Intelligence Intake →</button>
+    </div>
+  </div>
+  <div>
+    <form id="intakeForm" action="https://formspree.io/f/xbdppngr" method="POST">
+      <div class="form-row">
+        <div class="form-group"><label for="parentFirst">Parent / Guardian First Name</label><input type="text" id="parentFirst" name="parent_first_name" placeholder="First name" required /></div>
+        <div class="form-group"><label for="parentLast">Last Name</label><input type="text" id="parentLast" name="parent_last_name" placeholder="Last name" required /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="email">Email Address</label><input type="email" id="email" name="email" placeholder="your@email.com" required /></div>
+        <div class="form-group"><label for="phone">Phone Number</label><input type="tel" id="phone" name="phone" placeholder="(000) 000-0000" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="athleteName">Athlete's First Name</label><input type="text" id="athleteName" name="athlete_first_name" placeholder="First name" required /></div>
+        <div class="form-group"><label for="athleteAge">Athlete's Age</label><input type="number" id="athleteAge" name="athlete_age" placeholder="e.g. 12" min="5" max="18" required /></div>
+      </div>
+      <div class="form-group">
+        <label for="sport">Primary Sport</label>
+        <select id="sport" name="primary_sport" required>
+          <option value="" disabled selected>Select a sport</option>
+          <option>Football</option><option>Basketball</option><option>Soccer</option>
+          <option>Track &amp; Field</option><option>Baseball / Softball</option>
+          <option>Volleyball</option><option>Swimming</option><option>Tennis</option>
+          <option>Gymnastics</option><option>Wrestling</option><option>Lacrosse</option>
+          <option>Multiple Sports</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="level">Current Competition Level</label>
+        <select id="level" name="competition_level">
+          <option value="" disabled selected>Select level</option>
+          <option>Recreational / Club</option><option>Travel / AAU</option>
+          <option>Middle School</option><option>High School JV</option>
+          <option>High School Varsity</option><option>Elite / Nationally Competitive</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Services You're Interested In</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" name="interest_assessment" value="Athlete Identity Assessment" /><span>Athlete Identity Assessment</span></label>
+          <label class="checkbox-item"><input type="checkbox" name="interest_development" value="Youth Development Program" /><span>Youth Development Program</span></label>
+          <label class="checkbox-item"><input type="checkbox" name="interest_nil" value="Pre-NIL Family Strategy" /><span>Pre-NIL Family Strategy</span></label>
+          <label class="checkbox-item"><input type="checkbox" name="interest_parent" value="Parent-as-Strategist Coaching" /><span>Parent-as-Strategist Coaching</span></label>
+        </div>
+      </div>
+      <div class="form-group"><label for="goals">What are your biggest goals for your athlete right now?</label><textarea id="goals" name="goals" placeholder="Share as much or as little as you'd like…"></textarea></div>
+      <div class="form-group">
+        <label for="referral">How did you hear about StrideMark?</label>
+        <select id="referral" name="referral_source">
+          <option value="" disabled selected>Select one</option>
+          <option>Instagram</option><option>Word of mouth / referral</option>
+          <option>Google Search</option><option>Facebook / Social Media</option>
+          <option>Event or Community</option><option>Other</option>
+        </select>
+      </div>
+      <input type="hidden" name="_subject" value="New SMG Expression of Interest" />
+      <button type="submit" class="submit-btn">Submit Expression of Interest →</button>
+    </form>
+    <div class="form-success" id="formSuccess">
+      <span class="success-icon">✦</span>
+      <h3>Thank you.</h3>
+      <p>We've received your interest and will be in touch within 48 hours.<br/>We look forward to meeting your athlete.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-header">
+    <h2 class="reveal">What Families Are Saying</h2>
+    <p class="section-label neon">Testimonials</p>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <p class="testimonial-quote">StrideMark completely changed how our family thinks about our son's athletic future. We came in focused on highlight reels — we left with a real strategy.</p>
+      <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+      <div class="testimonial-author"><div class="author-avatar">TM</div><div class="author-info"><div class="author-name">Tanya M.</div><div class="author-detail">Mother of a 14-yr-old WR · Football</div></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <p class="testimonial-quote">The Parent-as-Strategist coaching was eye-opening. I didn't realize how much influence I had — and how little direction I was giving it. StrideMark fixed that.</p>
+      <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+      <div class="testimonial-author"><div class="author-avatar">DL</div><div class="author-info"><div class="author-name">Darnell L.</div><div class="author-detail">Father of a 16-yr-old Guard · Basketball</div></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <p class="testimonial-quote">My daughter is 12 and already has a brand identity document. I didn't even know that was a thing. StrideMark is ahead of the curve in ways most programs aren't even thinking about yet.</p>
+      <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+      <div class="testimonial-author"><div class="author-avatar">KR</div><div class="author-info"><div class="author-name">Kezia R.</div><div class="author-detail">Mother of a 12-yr-old Sprinter · Track &amp; Field</div></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <p class="testimonial-quote">The Pre-NIL strategy session was the most valuable two hours I've spent as a sports parent. Practical, specific, and built around my kid — not a template.</p>
+      <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+      <div class="testimonial-author"><div class="author-avatar">JW</div><div class="author-info"><div class="author-name">James W.</div><div class="author-detail">Father of a 15-yr-old Midfielder · Soccer</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING BANNER -->
+
+<div class="booking-banner" id="booking">
+  <div class="booking-text">
+    <h2>Ready to take the first stride?</h2>
+    <p>Book a complimentary 30-minute discovery call with the StrideMark team.</p>
+  </div>
+  <a href="https://calendly.com/nicole-stridemarkgroup" target="_blank" class="booking-btn">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+    Book a Discovery Call
+  </a>
+</div>
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">Stride<span>Mark</span></div>
+      <div class="footer-tagline">Grassroots Youth Athlete Ecosystem</div>
+      <div class="social-links" style="margin-top:1.2rem;">
+        <a href="https://instagram.com/stridemarkgroup" target="_blank" class="social-link" title="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/NicoleJohnson" target="_blank" class="social-link" title="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="https://calendly.com/nicole-stridemarkgroup" target="_blank" class="social-link" title="Book a Call" style="width:auto;padding:0 1rem;gap:0.5rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;"><path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+          Book a Call
+        </a>
+      </div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#mission">Mission</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#process">How It Works</a></li>
+      <li><a href="#intake">Get Started</a></li>
+      <li><a href="#booking">Book a Call</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 StrideMark. All rights reserved.</div>
+    <div style="display:flex;gap:1.5rem;align-items:center;">
+      <a href="https://instagram.com/stridemarkgroup" class="footer-ig" target="_blank">Instagram ↗</a>
+      <a href="https://linkedin.com/in/NicoleJohnson" class="footer-ig" target="_blank">LinkedIn ↗</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════ -->
+
+<script>
+  /* ── Smooth scroll ── */
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const id = this.getAttribute('href');
+      if (id === '#') return;
+      const target = document.querySelector(id);
+      if (target) {
+        e.preventDefault();
+        const navH = document.querySelector('nav').offsetHeight;
+        const top = target.getBoundingClientRect().top + window.scrollY - navH - 8;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  /* ── Scroll reveal ── */
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.d || 0);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.dataset.d = (i % 4) * 100;
+    obs.observe(el);
+  });
+
+  /* ── Express Interest form submit ── */
+  document.getElementById('intakeForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = this;
+    const data = new FormData(form);
+    try {
+      const response = await fetch('https://formspree.io/f/xbdppngr', {
+        method: 'POST', body: data, headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        form.style.display = 'none';
+        const success = document.getElementById('formSuccess');
+        success.style.display = 'block';
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        alert('Something went wrong. Please try again or email us directly.');
+      }
+    } catch (err) {
+      alert('Something went wrong. Please check your connection and try again.');
+    }
+  });
+
+  /* ── Intelligence Intake Overlay ── */
+  const IO_TOTAL = 8;
+
+  function openIntake() {
+    document.getElementById('intakeOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    ioGoTo(0);
+  }
+
+  function closeIntake() {
+    document.getElementById('intakeOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function ioGoTo(n) {
+    document.querySelectorAll('.io-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('io-' + n).classList.add('active');
+    ioUpdateProgress(n);
+    document.getElementById('intakeOverlay').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function ioUpdateProgress(n) {
+    const pct = n === 0 ? 0 : Math.round((n / IO_TOTAL) * 100);
+    document.getElementById('ioProgressBar').style.width = pct + '%';
+    const label = document.getElementById('ioStepLabel');
+    if (n === 0) label.innerHTML = 'Intake Form';
+    else if (n === IO_TOTAL) label.innerHTML = 'Complete';
+    else label.innerHTML = 'Section <strong>' + n + '</strong> of ' + (IO_TOTAL - 1);
+
+    const dotsEl = document.getElementById('io-dots-' + n);
+    if (dotsEl) {
+      dotsEl.innerHTML = '';
+      for (let i = 1; i <= IO_TOTAL - 1; i++) {
+        const d = document.createElement('div');
+        d.className = 'io-dot' + (i === n ? ' active' : (i < n ? ' done' : ''));
+        dotsEl.appendChild(d);
+      }
+    }
+  }
+
+  function ioSelectRadio(groupId, clickedLabel) {
+    document.getElementById(groupId).querySelectorAll('.io-radio-option').forEach(o => o.classList.remove('selected'));
+    clickedLabel.classList.add('selected');
+    const r = clickedLabel.querySelector('input[type="radio"]');
+    if (r) r.checked = true;
+  }
+
+  async function ioSubmit() {
+    const btn = document.getElementById('ioSubmitBtn');
+    const errMsg = document.getElementById('ioError');
+    btn.disabled = true;
+    btn.childNodes[0].textContent = 'Sending… ';
+    errMsg.style.display = 'none';
+
+    try {
+      const formData = new FormData(document.getElementById('ioForm'));
+      const res = await fetch('https://formspree.io/f/xbdppngr', {
+        method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        ioGoTo(8);
+      } else {
+        throw new Error('failed');
+      }
+    } catch (e) {
+      btn.disabled = false;
+      btn.childNodes[0].textContent = 'Submit ';
+      errMsg.style.display = 'block';
+    }
+  }
+
+  /* Close overlay on Escape key */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeIntake();
+  });
+</script>
+
+</body>
+</html> 
